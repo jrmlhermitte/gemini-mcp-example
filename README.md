@@ -24,7 +24,7 @@ source .venv/bin/activate
 
 ## Write MCP Server And Test
 
-3. The file we'll run is in `gemini-mcp-example/main.py` and already defined.
+1. The file we'll run is in `gemini-mcp-example/main.py` and already defined.
 Take a look at it. The main components are 
 
 ```python
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     mcp.run(transport='stdio')
 ```
 
-4. Run file
+2. Run file
 
 (**Don't** forget to activate your virtual env `source .venv/bin/activate`)
 
@@ -48,7 +48,7 @@ if __name__ == "__main__":
 python gemini-mcp-example/main.py
 ```
 
-5. Init communication
+3. Init communication
 
 We're going to initialize the [2024-11-05](https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle) protocol version using stdin/stdout (the `stdio` protocol which we setup our fast MCP server to use).
 

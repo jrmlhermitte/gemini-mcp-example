@@ -1,7 +1,6 @@
 ## MCP Example
 
-Quick and simple repo to demonstrate the very basics MCP and Gemini CLI. Nothing
-more.
+Quick and simple repo to demonstrate the very basics MCP and Gemini CLI. Nothing more.
 
 ## Quick Setup
 Quick setup of a new project (using `uv`):
@@ -26,7 +25,7 @@ source .venv/bin/activate
 
 ## Write MCP Server And Test
 
-3. Write your file in `mcp/main.py`:
+3. Write your file in `gemini-mcp/main.py`:
 
 ```python
 import httpx
@@ -49,15 +48,12 @@ if __name__ == "__main__":
 4. Run file
 
 ```bash
-python mcp/main.py
+python gemini-mcp/main.py
 ```
 
 5. Init communication
 
-We're going to initialize the
-[2024-11-05](https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle)
-protocol version using stdin/stdout (the `stdio` protocol which we setup our
-fast MCP server to use).
+We're going to initialize the [2024-11-05](https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle) protocol version using stdin/stdout (the `stdio` protocol which we setup our fast MCP server to use).
 
 Paste this exactly into your shell:
 
@@ -72,9 +68,7 @@ You should see:
 {"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2024-11-05","capabilities":{"experimental":{},"prompts":{"listChanged":false},"resources":{"subscribe":false,"listChanged":false},"tools":{"listChanged":false}},"serverInfo":{"name":"greeter","version":"1.10.1"}}}
 ```
 
-**NOTE**: The json commands here and below must be pasted **as is**. You cannot have
-newlines in between. If the formatting is incorrect, the server will just ignore
-your requests.
+**NOTE**: The json commands here and below must be pasted **as is**. You cannot have newlines in between. If the formatting is incorrect, the server will just ignore your requests.
 
 When you do, paste this to start the connection:
 ```json
@@ -122,7 +116,7 @@ npm install -g @google/gemini-cli
 ```
 cd /path/to/github/folder
 mkdir -p ~/gemini/extensions
-ln -s $PWD/mcp ~/.gemini/extensions
+ln -s $PWD/gemini-mcp ~/.gemini/extensions
 ```
 
 4. Start gemini and list mcp servers
@@ -139,7 +133,8 @@ Then type:
 You should see this:
 ![mcp](images/gemini_mcp_command.png)
 
-**NOTE**: You **must** start gemini from the code folder. The reason is that the extension runs `python ./mcp/main.py`. If you want to make this runnable from everywhere, you'll need to make sure your base python environment contains the `fastmcp` library and that the `gemini-extension.json` refers to an absolute path.
+**NOTE**: You **must** start gemini from the code folder. The reason is that the
+extension runs `python ./gemini-mcp/main.py`. If you want to make this runnable from everywhere, you'll need to make sure your base python environment contains the `fastmcp` library and that the `gemini-extension.json` refers to an absolute path.
 
 5. Give it your name. It will likely try to call your tools.
 
@@ -153,6 +148,18 @@ Gemini should figure that it might want to call the greeting tool, given you've 
 
 And it should hopefully have called the tool.
 ![tool_called](images/greet_tool_called.png)
+
+
+## Troubleshooting
+
+Running into problems? Try running the mcp server yourself:
+```
+source .venv/bin/activate
+python gemini-extension/main.py
+```
+
+(Also don't forget the `source .venv/bin/activate`; We're running this in a
+local virtual environment here)
 
 ## Where to go from here?
 

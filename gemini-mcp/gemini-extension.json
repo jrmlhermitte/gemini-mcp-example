@@ -4,7 +4,7 @@
   "mcpServers": {
     "my-server": {
       "command": "python",
-      "args": ["./mcp/main.py"]
+      "args": ["./gemini-mcp/main.py"]
     }
   },
   "contextFileName": "GEMINI.md"

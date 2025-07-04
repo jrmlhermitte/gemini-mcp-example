@@ -16,15 +16,15 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 2. Clone project and initialize virtualenv
 
 ```bash
-git clone https://github.com/jrmlhermitte/gemini-mcp.git 
-cd gemini-mcp
+git clone https://github.com/jrmlhermitte/gemini-mcp-example.git 
+cd gemini-mcp-example
 uv sync
 source .venv/bin/activate
 ```
 
 ## Write MCP Server And Test
 
-3. The file we'll run is in `gemini-mcp/main.py` and already defined.
+3. The file we'll run is in `gemini-mcp-example/main.py` and already defined.
 Take a look at it. The main components are 
 
 ```python
@@ -45,7 +45,7 @@ if __name__ == "__main__":
 (**Don't** forget to activate your virtual env `source .venv/bin/activate`)
 
 ```bash
-python gemini-mcp/main.py
+python gemini-mcp-example/main.py
 ```
 
 5. Init communication
@@ -115,7 +115,7 @@ npm install -g @google/gemini-cli
 
 ```
 mkdir -p ~/gemini/extensions
-ln -s $PWD/gemini-mcp ~/.gemini/extensions
+ln -s $PWD/gemini-mcp-example ~/.gemini/extensions
 ```
 
 4. Start gemini and list mcp servers
@@ -134,7 +134,7 @@ You should see this:
 
 
 **NOTE**: You **must** start gemini from the code folder. The reason is that the
-extension runs `python ./gemini-mcp/main.py`. If you want to make this runnable from everywhere, you'll need to make sure your base python environment contains the `fastmcp` library and that the `gemini-extension.json` refers to an absolute path.
+extension runs `python ./gemini-mcp-example/main.py`. If you want to make this runnable from everywhere, you'll need to make sure your base python environment contains the `fastmcp` library and that the `gemini-extension.json` refers to an absolute path.
 **NOTE**: If this is your first time setting up Gemini CLI, you will also see some easy to follow setup steps.
 
 5. Give it your name. It will likely try to call your tools.

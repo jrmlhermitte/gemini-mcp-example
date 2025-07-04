@@ -1,10 +1,10 @@
 {
-  "name": "my-mcp-server",
+  "name": "gemini-mcp-example",
   "version": "0.1.0",
   "mcpServers": {
     "my-server": {
       "command": "python",
-      "args": ["./gemini-mcp/main.py"]
+      "args": ["./gemini-mcp-example/main.py"]
     }
   },
   "contextFileName": "GEMINI.md"

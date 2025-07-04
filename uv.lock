@@ -73,7 +73,7 @@ wheels = [
 ]
 
 [[package]]
-name = "gemini-mcp"
+name = "gemini-mcp-example"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

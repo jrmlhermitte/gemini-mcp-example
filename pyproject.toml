@@ -1,5 +1,5 @@
 [project]
-name = "gemini-mcp"
+name = "gemini-mcp-example"
 version = "0.1.0"
 description = "Gemini MCP Demonstration"
 readme = "README.md"

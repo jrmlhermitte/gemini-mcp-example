@@ -92,3 +92,10 @@ Integrating with Gemini CLI.
 
 1. [install node](https://nodejs.org/en/download)
 2. 
+
+[gemini extension
+docs](https://github.com/google-gemini/gemini-cli/blob/main/docs/extension.md).
+
+```bash
+uv add cx_Freeze
+```

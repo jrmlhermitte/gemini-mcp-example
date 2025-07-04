@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "cx-freeze>=8.3.0",
     "httpx>=0.28.1",
     "mcp[cli]>=1.10.1",
 ]

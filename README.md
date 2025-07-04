@@ -13,39 +13,36 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 (linux and mac)
 
-2. Create a project and setup python env
+2. Clone project and initialize virtualenv
 
 ```bash
-mkdir my_project
-cd my_project
-uv init
-uv add "mcp[cli]" httpx
+git clone https://github.com/jrmlhermitte/gemini-mcp.git 
+cd gemini-mcp
+uv sync
 source .venv/bin/activate
 ```
 
 ## Write MCP Server And Test
 
-3. Write your file in `gemini-mcp/main.py`:
+3. The file we'll run is in `gemini-mcp/main.py` and already defined.
+Take a look at it. The main components are 
 
 ```python
-import httpx
-from mcp.server.fastmcp import FastMCP
-
-# Initialize FastMCP server
+# ...
 mcp = FastMCP("greeter")
-
-
+# ...
 @mcp.tool()
 def greet(name: str) -> str:
     return f'Hello {name}!'
-
-
+# ...
 if __name__ == "__main__":
     # NOTE: stdio is the default.
     mcp.run(transport='stdio')
 ```
 
 4. Run file
+
+(**Don't** forget to activate your virtual env `source .venv/bin/activate`)
 
 ```bash
 python gemini-mcp/main.py
@@ -106,15 +103,17 @@ and send commands to stdin and receive responses from stdout using the stdio pro
 ## Gemini CLI
 Integrating with Gemini CLI.
 
-1. [install node](https://nodejs.org/en/download)
+1. [Install node](https://nodejs.org/en/download)
 2. [Install Gemini CLI](https://github.com/google-gemini/gemini-cli?tab=readme-ov-file):
 
 ```
 npm install -g @google/gemini-cli
 ```
 3. Add the Gemini extension from here ([docs](https://github.com/google-gemini/gemini-cli/blob/main/docs/extension.md)):
+
+(**NOTE**: This should be run from the root of this github repo)
+
 ```
-cd /path/to/github/folder
 mkdir -p ~/gemini/extensions
 ln -s $PWD/gemini-mcp ~/.gemini/extensions
 ```
@@ -133,8 +132,10 @@ Then type:
 You should see this:
 ![mcp](images/gemini_mcp_command.png)
 
+
 **NOTE**: You **must** start gemini from the code folder. The reason is that the
 extension runs `python ./gemini-mcp/main.py`. If you want to make this runnable from everywhere, you'll need to make sure your base python environment contains the `fastmcp` library and that the `gemini-extension.json` refers to an absolute path.
+**NOTE**: If this is your first time setting up Gemini CLI, you will also see some easy to follow setup steps.
 
 5. Give it your name. It will likely try to call your tools.
 
@@ -152,14 +153,14 @@ And it should hopefully have called the tool.
 
 ## Troubleshooting
 
-Running into problems? Try running the mcp server yourself:
+Running into problems? Try running the mcp server yourself to see if it's able to start up:
+
 ```
 source .venv/bin/activate
 python gemini-extension/main.py
 ```
 
-(Also don't forget the `source .venv/bin/activate`; We're running this in a
-local virtual environment here)
+(Also don't forget to run `source .venv/bin/activate` before starting `gemini`; We're running this in a local virtual environment here.)
 
 ## Where to go from here?
 

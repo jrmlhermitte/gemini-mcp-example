@@ -1,16 +1,17 @@
 ## MCP Example
 
-Quick repo to demonstrate MCP. Nothing more.
+Quick and simple repo to demonstrate the very basics MCP and Gemini CLI. Nothing
+more.
 
-## Setup
-Quick setup of a new project:
+## Quick Setup
+Quick setup of a new project (using `uv`):
 
-1. [Install
-UV](https://docs.astral.sh/uv/getting-started/installation/#installing-uv)
+1. [Install UV](https://docs.astral.sh/uv/getting-started/installation/#installing-uv)
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
+
 (linux and mac)
 
 2. Create a project and setup python env
@@ -23,18 +24,20 @@ uv add "mcp[cli]" httpx
 source .venv/bin/activate
 ```
 
-3. Write your file:
-```py3
-from typing import Any
+## Write MCP Server And Test
+
+3. Write your file in `mcp/main.py`:
+
+```python
 import httpx
 from mcp.server.fastmcp import FastMCP
 
 # Initialize FastMCP server
-mcp = FastMCP("weather")
+mcp = FastMCP("greeter")
 
 
 @mcp.tool()
-def my_tool(name: str) -> str:
+def greet(name: str) -> str:
     return f'Hello {name}!'
 
 
@@ -44,16 +47,17 @@ if __name__ == "__main__":
 ```
 
 4. Run file
-```
-python main.py
-```
 
+```bash
+python mcp/main.py
+```
 
 5. Init communication
 
 We're going to initialize the
 [2024-11-05](https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle)
-protocol version.
+protocol version using stdin/stdout (the `stdio` protocol which we setup our
+fast MCP server to use).
 
 Paste this exactly into your shell:
 
@@ -61,11 +65,16 @@ Paste this exactly into your shell:
 {"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{"roots":{"listChanged":true},"tools":{"listChanged":true},"sampling":{},"elicitation":{}},"clientInfo":{"name":"ExampleClient","title":"ExampleClientDisplayName","version":"1.0.0"}}}
 ```
 
+
 You should see:
 
 ```json
-{"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2024-11-05","capabilities":{"experimental":{},"prompts":{"listChanged":false},"resources":{"subscribe":false,"listChanged":false},"tools":{"listChanged":false}},"serverInfo":{"name":"weather","version":"1.10.1"}}}
+{"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2024-11-05","capabilities":{"experimental":{},"prompts":{"listChanged":false},"resources":{"subscribe":false,"listChanged":false},"tools":{"listChanged":false}},"serverInfo":{"name":"greeter","version":"1.10.1"}}}
 ```
+
+**NOTE**: The json commands here and below must be pasted **as is**. You cannot have
+newlines in between. If the formatting is incorrect, the server will just ignore
+your requests.
 
 When you do, paste this to start the connection:
 ```json
@@ -80,22 +89,71 @@ Now type this to list available tools:
 you should see something like this (you may see additional logging):
 
 ```json
-{"jsonrpc":"2.0","id":1,"result":{"tools":[{"name":"my_tool","description":"","inputSchema":{"properties":{"name":{"title":"Name","type":"string"}},"required":["name"],"title":"my_toolArguments","type":"object"},"outputSchema":{"properties":{"result":{"title":"Result","type":"string"}},"required":["result"],"title":"my_toolOutput","type":"object"}}]}}
+{"jsonrpc":"2.0","id":1,"result":{"tools":[{"name":"greet","description":"","inputSchema":{"properties":{"name":{"title":"Name","type":"string"}},"required":["name"],"title":"greetArguments","type":"object"},"outputSchema":{"properties":{"result":{"title":"Result","type":"string"}},"required":["result"],"title":"greetOutput","type":"object"}}]}}
 ```
 
 Congratulations! You have successfully started a Stdio connection with an MCP
-server! This is how you're going to setup an MCP server with Gemini.
+server! Now test calling your tool:
+```json
+{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"greet","arguments":{"name":"Teal'c"}}}
+```
+
+you should then see:
+```json
+{"jsonrpc":"2.0","id":1,"result":{"content":[{"type":"text","text":"Hello Teal'c!"}],"structuredContent":{"result":"Hello Teal'c!"},"isError":false}}
+```
+
+This is how you're going to setup an MCP server with Gemini.
+
+Gemini CLI will run your server as a child process
+and send commands to stdin and receive responses from stdout using the stdio protocol.
 
 
 ## Gemini CLI
 Integrating with Gemini CLI.
 
 1. [install node](https://nodejs.org/en/download)
-2. 
+2. [Install Gemini CLI](https://github.com/google-gemini/gemini-cli?tab=readme-ov-file):
 
-[gemini extension
-docs](https://github.com/google-gemini/gemini-cli/blob/main/docs/extension.md).
-
-```bash
-uv add cx_Freeze
 ```
+npm install -g @google/gemini-cli
+```
+3. Add the Gemini extension from here ([docs](https://github.com/google-gemini/gemini-cli/blob/main/docs/extension.md)):
+```
+cd /path/to/github/folder
+mkdir -p ~/gemini/extensions
+ln -s $PWD/mcp ~/.gemini/extensions
+```
+
+4. Start gemini and list mcp servers
+
+```
+gemini
+```
+
+Then type:
+```
+/mcp
+```
+
+You should see this:
+![mcp](images/gemini_mcp_command.png)
+
+**NOTE**: You **must** start gemini from the code folder. The reason is that the extension runs `python ./mcp/main.py`. If you want to make this runnable from everywhere, you'll need to make sure your base python environment contains the `fastmcp` library and that the `gemini-extension.json` refers to an absolute path.
+
+5. Give it your name. It will likely try to call your tools.
+
+Input something like:
+```
+My name is Teal'c
+```
+
+Gemini should figure that it might want to call the greeting tool, given you've introduced yourself. You should get a request to call the tool:
+![confirmation](images/greet_request.png)
+
+And it should hopefully have called the tool.
+![tool_called](images/greet_tool_called.png)
+
+## Where to go from here?
+
+This demonstrates how easy it is to setup an MCP server and integrate it with Gemini. You should be able to have a basic enough understanding to integrate it with your own tools now!
